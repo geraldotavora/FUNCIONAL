@@ -1,0 +1,32 @@
+import Data.Ord
+
+data ARV a = ArvVazia | Node a (ARV a) (ARV a) deriving (Show, Read, Eq)
+
+pertence :: ARV a -> a -> Bool
+pertence ArvVazia _ = False
+pertence (Node v (ARV e) (ARV d)) b
+    |v == b = True
+    |b < v = pertence e b
+    |b > v = pertence d b
+
+singleton :: a -> ARV a
+singleton x = Node x ArvVazia ArvVazia
+
+InsercaoArv :: (Ord a) => a -> ARV a -> ARV a
+InsercaoArv x ArvVazia = singleton x
+InsercaoArv x (Node a esq dir)
+    | x == a = Node x esq dir
+    | x < a = Node a (InsercaoArv x esq) dir
+    | x > a = Node a esq (InsercaoArv x dir)
+
+-- procurar
+BuscaArv :: (Ord a) => a -> ARV a -> Bool
+BuscaArv x ArvVazia = False
+BuscaArv x (Node a esq dir)
+    | x == a = True
+    | x < a = BuscaArv x esq
+    | x > a = BuscaArv x dir
+
+CriarArv :: (Ord a) => a -> ARV a -> [a]
+CriarArv x ArvVazia = [x]
+CriarArv x (Node a esq dir)
